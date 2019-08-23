@@ -1,0 +1,46 @@
+#include <string>
+#include <ostream>
+#include<iostream>
+#include<tuple>
+#include<vector>
+#include<functional>
+using namespace std;
+
+typedef tuple<string,string> fields;
+class codebuilder
+{
+    string clname;
+    
+    
+    public:
+    vector<fields> members; 
+    codebuilder(string st) : clname(st) {}
+    
+    codebuilder & addfield(string type,string field)
+    {
+        fields temp(type,field);
+        members.push_back(temp);
+        return *this;
+    }
+    
+    friend ostream & operator <<(ostream &oss, codebuilder &obj)
+    {
+     oss<<"class "<<obj.clname <<"\n" <<"{" <<"\n";
+     
+     for(auto f: obj.members)
+     {
+         oss<<std::get<0>(f) <<"    "<<std::get<1>(f)<<"\n";
+     }
+     
+     oss<<"};";
+    }
+    
+};
+
+
+int main()
+{
+    auto cb=codebuilder("Person").addfield("string","name").addfield("int","age").addfield("int","sal");
+    cout<<cb;
+    
+}
